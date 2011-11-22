@@ -74,10 +74,7 @@ def _get_system_username():
         import pwd
         return pwd.getpwuid(os.getuid())[0]
     else:
-        import win32api
-        import win32security
-        import win32profile
-        return win32api.GetUserName()
+        return os.environ['USERNAME']
 
 
 def _rc_path():
@@ -85,16 +82,7 @@ def _rc_path():
     Return platform-specific default file path for $HOME/.fabricrc.
     """
     rc_file = '.fabricrc'
-    if not win32:
-        return os.path.expanduser("~/" + rc_file)
-    else:
-        from win32com.shell.shell import SHGetSpecialFolderPath
-        from win32com.shell.shellcon import CSIDL_PROFILE
-        return "%s/%s" % (
-            SHGetSpecialFolderPath(0, CSIDL_PROFILE),
-            rc_file
-        )
-
+    return os.path.expanduser("~/" + rc_file)
 
 # Options/settings which exist both as environment keys and which can be set on
 # the command line, are defined here. When used via `fab` they will be added to
